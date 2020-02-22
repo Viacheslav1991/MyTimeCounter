@@ -10,7 +10,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +28,8 @@ import com.android.bignerdranch.mytimecounter.model.ListEmploymentsItem;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+
+//Hello world!
 public class CounterListFragment extends Fragment {
 
 
