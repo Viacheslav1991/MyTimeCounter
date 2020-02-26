@@ -24,7 +24,7 @@ public class EmploymentBaseHelper extends SQLiteOpenHelper {
                 EmploymentTable.Cols.UUID + ", " +
                 EmploymentTable.Cols.TITLE + ", " +
                 EmploymentTable.Cols.DATE + ", " +
-                EmploymentTable.Cols.COLOR +
+                EmploymentTable.Cols.COLOR + ", " +
                 EmploymentTable.Cols.TIMEINT +
                 ")"
         );
