@@ -5,11 +5,13 @@ import com.android.bignerdranch.mytimecounter.TimeHelper;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DailyEmploymentsList implements HasDate{
     private Calendar mCalendar;
-    private List<Employment> mEmployments;
+    private Map<String,Employment> mEmployments;
 
     public Calendar getDate() {
         return mCalendar;
@@ -27,17 +29,14 @@ public class DailyEmploymentsList implements HasDate{
 
     public DailyEmploymentsList() {
         mCalendar = new GregorianCalendar();
-        mEmployments = new ArrayList<>();
+        mEmployments = new HashMap<>();
     }
 
     public void addEmployment(Employment employment) {
-        if (mEmployments.contains(employment)) {
-            return;
-        }
-        mEmployments.add(employment);
+        mEmployments.put(employment.getTitle(), employment);
     }
 
     public List<Employment> getEmployments() {
-        return mEmployments;
+        return new ArrayList<>(mEmployments.values());
     }
 }

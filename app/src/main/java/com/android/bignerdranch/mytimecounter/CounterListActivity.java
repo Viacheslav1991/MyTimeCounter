@@ -44,7 +44,7 @@ public class CounterListActivity extends AppCompatActivity implements CounterLis
     public void onEmploymentUpdated(Employment employment) {
         CounterListFragment listFragment = (CounterListFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_container);
-        listFragment.updateUI();
+        listFragment.updateEmployment(employment);
     }
 
     @Override
@@ -52,6 +52,7 @@ public class CounterListActivity extends AppCompatActivity implements CounterLis
         CounterListFragment listFragment = (CounterListFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_container);
         listFragment.updateUI();
+
     }
 
     @Override

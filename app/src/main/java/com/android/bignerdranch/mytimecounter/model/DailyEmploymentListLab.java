@@ -56,6 +56,7 @@ public class DailyEmploymentListLab {
     }
 
     public void updateLists() {
+
         List<Employment> employments = EmploymentLab.getInstance(mContext).getEmployments();
         for (Employment employment : employments) {
             Calendar calendar = employment.getDate();

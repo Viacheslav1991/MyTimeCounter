@@ -135,6 +135,7 @@ public class EmploymentLab {
     }
 
     public Employment getEmployment(String title) {
+
         for (Employment employment : employments
         ) {
             if (employment.getTitle().equals(title)) {
@@ -147,7 +148,34 @@ public class EmploymentLab {
     }
 
     public Employment getEmployment(ListEmploymentsItem item) {
-        for (Employment employment : employments
+        EmploymentCursorWrapper cursor = queryEmployments(
+                EmploymentTable.Cols.TITLE + " = ?",
+                new String[]{item.getTitle()});
+        try {
+            if (cursor.getCount() == 0) {
+                Employment employment = new Employment(item.getTitle());
+                employment.setColor(item.getColor());
+                addEmployment(employment);
+                return employment;
+//                return null;
+            }
+            cursor.moveToFirst();
+            Employment employment = cursor.getEmployment();
+            if (TimeHelper.compareDate(employment, new GregorianCalendar())) {
+                return employment;
+            }
+        } finally {
+            cursor.close();
+        }
+
+        /*Employment employment = new Employment(item.getTitle());
+        employment.setColor(item.getColor());
+        addEmployment(employment);
+        return employment;*/
+        return null;
+
+
+        /*for (Employment employment : employments
         ) {
             if (employment.getTitle().equals(item.getTitle())
                     && TimeHelper.compareDate(employment, new GregorianCalendar())) {
@@ -157,7 +185,7 @@ public class EmploymentLab {
         Employment employment = new Employment(item.getTitle());
         employment.setColor(item.getColor());
         addEmployment(employment);
-        return employment;
+        return employment;*/
     }
 
     public ListEmploymentsItem getItemListEmployment(String title) {

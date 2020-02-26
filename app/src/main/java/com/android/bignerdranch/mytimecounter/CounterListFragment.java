@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -242,6 +243,9 @@ public class CounterListFragment extends Fragment {
         }
     }
 
+    public void updateEmployment(Employment employment) {
+        EmploymentLab.getInstance(getActivity()).updateEmployment(employment);
+    }
     @Override
     public void onResume() {
         super.onResume();

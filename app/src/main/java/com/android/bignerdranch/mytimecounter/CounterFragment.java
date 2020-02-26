@@ -60,14 +60,16 @@ public class CounterFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UUID employmentID = (UUID) getArguments().getSerializable(ARG_EMPLOYMENT_ID);
-        mEmployment = EmploymentLab.getInstance(getContext()).getEmployment(employmentID);
+
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_counter, container, false);
+
+        UUID employmentID = (UUID) getArguments().getSerializable(ARG_EMPLOYMENT_ID);
+        mEmployment = EmploymentLab.getInstance(getContext()).getEmployment(employmentID);
 
         totalTime = mEmployment.getTimeInt();
         currentTime = 0;
@@ -116,7 +118,7 @@ public class CounterFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mEmployment.setTimeInt(totalTime + currentTime);
-//        mCallbacks.onEmploymentUpdated(mEmployment);
+        mCallbacks.onEmploymentUpdated(mEmployment);
         mCallbacks = null;
     }
 }
