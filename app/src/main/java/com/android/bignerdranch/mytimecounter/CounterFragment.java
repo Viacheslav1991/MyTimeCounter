@@ -61,7 +61,7 @@ public class CounterFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UUID employmentID = (UUID) getArguments().getSerializable(ARG_EMPLOYMENT_ID);
-        mEmployment = EmploymentLab.getInstance().getEmployment(employmentID);
+        mEmployment = EmploymentLab.getInstance(getContext()).getEmployment(employmentID);
     }
 
     @Nullable

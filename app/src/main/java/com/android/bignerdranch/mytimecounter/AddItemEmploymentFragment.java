@@ -82,7 +82,7 @@ public class AddItemEmploymentFragment extends DialogFragment {
 
         if (getArguments() != null && getArguments().getSerializable(ARG_ITEM_EMPLOYMENT_TITLE) != null) {
             String title = (String) getArguments().getSerializable(ARG_ITEM_EMPLOYMENT_TITLE);
-            mListEmploymentsItem = EmploymentLab.getInstance()
+            mListEmploymentsItem = EmploymentLab.getInstance(getContext())
                     .getItemListEmployment(title);
             change = true;
         } else {
@@ -168,7 +168,7 @@ public class AddItemEmploymentFragment extends DialogFragment {
                                     .show();
 
                         } else if (!change) {
-                            EmploymentLab.getInstance().addItemListEmployment(mListEmploymentsItem);
+                            EmploymentLab.getInstance(getContext()).addItemListEmployment(mListEmploymentsItem);
                         }
                     }
                 })

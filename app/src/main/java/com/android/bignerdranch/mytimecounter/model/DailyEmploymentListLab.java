@@ -1,5 +1,7 @@
 package com.android.bignerdranch.mytimecounter.model;
 
+import android.content.Context;
+
 import com.android.bignerdranch.mytimecounter.TimeHelper;
 
 import java.util.ArrayList;
@@ -9,19 +11,22 @@ import java.util.Comparator;
 import java.util.List;
 
 public class DailyEmploymentListLab {
-    private static final DailyEmploymentListLab ourInstance = new DailyEmploymentListLab();
+    private static DailyEmploymentListLab ourInstance;
+    Context mContext;
     private List<DailyEmploymentsList> mDailyEmploymentsLists;
 
 
-    public static DailyEmploymentListLab getInstance() {
+    public static DailyEmploymentListLab getInstance(Context context) {
+        if (ourInstance == null) {
+            ourInstance = new DailyEmploymentListLab(context);
+        }
         return ourInstance;
     }
 
-    private DailyEmploymentListLab() {
+    private DailyEmploymentListLab(Context context) {
+        mContext = context.getApplicationContext();
         mDailyEmploymentsLists = new ArrayList<>();
     }
-
-
 
     public DailyEmploymentsList getDailyEmploymentsList(int i) {
         return mDailyEmploymentsLists.get(i);
@@ -51,7 +56,7 @@ public class DailyEmploymentListLab {
     }
 
     public void updateLists() {
-        List<Employment> employments = EmploymentLab.getInstance().getEmployments();
+        List<Employment> employments = EmploymentLab.getInstance(mContext).getEmployments();
         for (Employment employment : employments) {
             Calendar calendar = employment.getDate();
             getDailyEmploymentsList(calendar).addEmployment(employment);

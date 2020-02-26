@@ -31,16 +31,16 @@ public class StatisticPagerActivity extends AppCompatActivity implements Statist
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int i) {
-                DailyEmploymentsList list = DailyEmploymentListLab.getInstance().getDailyEmploymentsList(i);
+                DailyEmploymentsList list = DailyEmploymentListLab.getInstance(getApplicationContext()).getDailyEmploymentsList(i);
                 return StatisticListFragment.newInstance(list.getDateString());
             }
 
             @Override
             public int getCount() {
-                return DailyEmploymentListLab.getInstance().getSize();
+                return DailyEmploymentListLab.getInstance(getApplicationContext()).getSize();
             }
         });
-        mViewPager.setCurrentItem(DailyEmploymentListLab.getInstance().getSize() - 1);
+        mViewPager.setCurrentItem(DailyEmploymentListLab.getInstance(getApplicationContext()).getSize() - 1);
     }
 
     @Override

@@ -78,7 +78,7 @@ public class StatisticListFragment extends Fragment {
             dialog.setTargetFragment(StatisticListFragment.this, REQUEST_DATE);
             dialog.show(manager, DIALOG_DATE);
         });
-        mDailyEmploymentsList = DailyEmploymentListLab.getInstance().getDailyEmploymentsList(date);
+        mDailyEmploymentsList = DailyEmploymentListLab.getInstance(getActivity()).getDailyEmploymentsList(date);
         mRecyclerView.setAdapter(new LineAdapter(mDailyEmploymentsList.getEmployments()));
         return view;
     }
@@ -148,8 +148,8 @@ public class StatisticListFragment extends Fragment {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            for (int i = 0; i < DailyEmploymentListLab.getInstance().getSize(); i++) {
-                DailyEmploymentsList list = DailyEmploymentListLab.getInstance().getDailyEmploymentsList(i);
+            for (int i = 0; i < DailyEmploymentListLab.getInstance(getActivity()).getSize(); i++) {
+                DailyEmploymentsList list = DailyEmploymentListLab.getInstance(getActivity()).getDailyEmploymentsList(i);
                 if (TimeHelper.compareDate(list, calendar)) {
                     mCallbacks.onDateSelected(i);
                 }

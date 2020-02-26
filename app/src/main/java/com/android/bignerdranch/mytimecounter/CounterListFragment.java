@@ -49,8 +49,8 @@ public class CounterListFragment extends Fragment {
     }
 
     public void updateUI() {
-        List<ListEmploymentsItem> items = EmploymentLab.getInstance().getListEmploymentItems();
-        List<Employment> employments = EmploymentLab.getInstance().getEmployments();
+        List<ListEmploymentsItem> items = EmploymentLab.getInstance(getActivity()).getListEmploymentItems();
+        List<Employment> employments = EmploymentLab.getInstance(getActivity()).getEmployments();
         if (mCountAdapter == null) {
             mCountAdapter = new CountAdapter(items);
             mRecyclerView.setAdapter(mCountAdapter);
@@ -90,7 +90,7 @@ public class CounterListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.show_statistic:
-                DailyEmploymentListLab.getInstance().updateLists();
+                DailyEmploymentListLab.getInstance(getActivity()).updateLists();
                 Intent intent = new Intent(getActivity(), StatisticPagerActivity.class);
                 startActivity(intent);
                 return true;
@@ -190,7 +190,7 @@ public class CounterListFragment extends Fragment {
 //            mTotalTimeTextView.setText(TimeHelper.getTime(0));
 
             if (item.isHasEmployment()) {
-                for (Employment employment : EmploymentLab.getInstance().getEmployments()
+                for (Employment employment : EmploymentLab.getInstance(getActivity()).getEmployments()
                 ) {
                     if (employment.getTitle().equals(item.getTitle()) &&
                             TimeHelper.compareDate(employment, new GregorianCalendar())) {
@@ -206,7 +206,7 @@ public class CounterListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             mItem.setHasEmployment(true);
-            mEmployment = EmploymentLab.getInstance().getEmployment(mItem);
+            mEmployment = EmploymentLab.getInstance(getActivity()).getEmployment(mItem);
             mCallbacks.onEmploymentSelected(mEmployment);
             updateUI();
             position = getAdapterPosition();
@@ -224,7 +224,7 @@ public class CounterListFragment extends Fragment {
                     switch (item.getItemId()) {
                         case R.id.menu_item_delete:
                             Toast.makeText(getActivity(), "Deleted", Toast.LENGTH_LONG).show();
-                            EmploymentLab.getInstance().deleteItem(mItem);
+                            EmploymentLab.getInstance(getActivity()).deleteItem(mItem);
                             updateUI();
                             break;
                         case R.id.menu_item_change:

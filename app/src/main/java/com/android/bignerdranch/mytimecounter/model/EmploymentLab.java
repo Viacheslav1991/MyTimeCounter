@@ -1,8 +1,15 @@
 package com.android.bignerdranch.mytimecounter.model;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 
 import com.android.bignerdranch.mytimecounter.TimeHelper;
+import com.android.bignerdranch.mytimecounter.model.database.EmploymentBaseHelper;
+import com.android.bignerdranch.mytimecounter.model.database.EmploymentCursorWrapper;
+import com.android.bignerdranch.mytimecounter.model.database.EmploymentDbSchema;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,20 +19,31 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import static com.android.bignerdranch.mytimecounter.model.database.EmploymentDbSchema.*;
+
 public class EmploymentLab {
-    private static final EmploymentLab ourInstance = new EmploymentLab();
+    private static EmploymentLab ourInstance;
     private List<Employment> employments;
     private List<ListEmploymentsItem> mListEmploymentItems;
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
 
-    public static EmploymentLab getInstance() {
+    public static EmploymentLab getInstance(Context context) {
+        if (ourInstance == null) {
+            ourInstance = new EmploymentLab(context);
+        }
         return ourInstance;
     }
 
-    private EmploymentLab() {
+    private EmploymentLab(Context context) {
+        mContext = context.getApplicationContext();
+        mDatabase = new EmploymentBaseHelper(mContext)
+                .getWritableDatabase();
+
         employments = new ArrayList<>();
         mListEmploymentItems = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
+       /* for (int i = 0; i < 10; i++) {
             Employment employment = new Employment(("Employment number " + i));
             employment.setDate(GregorianCalendar.getInstance());
             Random rnd = new Random();
@@ -51,10 +69,22 @@ public class EmploymentLab {
                 }
             }
             mListEmploymentItems.add(item);
-        }
+        }*/
     }
 
     public List<Employment> getEmployments() {
+        List<Employment> employments = new ArrayList<>();
+        EmploymentCursorWrapper cursor = queryEmployments(null, null);
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                employments.add(cursor.getEmployment());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
         return employments;
     }
 
@@ -67,8 +97,18 @@ public class EmploymentLab {
     }
 
     public void addEmployment(Employment employment) {
-        employment.setTimeInt(0);
-        employments.add(employment);
+//        employment.setTimeInt(0);
+//        employments.add(employment);
+        ContentValues values = getContentValues(employment);
+        mDatabase.insert(EmploymentTable.NAME, null, values);
+    }
+
+    public void updateEmployment(Employment employment) {
+        String uuidString = employment.getId().toString();
+        ContentValues values = getContentValues(employment);
+        mDatabase.update(EmploymentTable.NAME, values,
+                EmploymentTable.Cols.UUID + " = ?",
+                new String[]{uuidString});
     }
 
     public void deleteEmployment(Employment employment) {
@@ -79,14 +119,19 @@ public class EmploymentLab {
         mListEmploymentItems.remove(item);
     }
 
-    public Employment getEmployment(UUID uuid) {
-        for (Employment employment : employments
-        ) {
-            if (employment.getId().equals(uuid)) {
-                return employment;
+    public Employment getEmployment(UUID id) {
+        EmploymentCursorWrapper cursor = queryEmployments(
+                EmploymentTable.Cols.UUID + " = ?",
+                new String[]{id.toString()});
+        try {
+            if (cursor.getCount() == 0) {
+                return null;
             }
+            cursor.moveToFirst();
+            return cursor.getEmployment();
+        } finally {
+            cursor.close();
         }
-        return null;
     }
 
     public Employment getEmployment(String title) {
@@ -97,7 +142,7 @@ public class EmploymentLab {
             }
         }
         Employment employment = new Employment(title);
-        employments.add(employment);
+        addEmployment(employment);
         return employment;
     }
 
@@ -111,7 +156,7 @@ public class EmploymentLab {
         }
         Employment employment = new Employment(item.getTitle());
         employment.setColor(item.getColor());
-        employments.add(employment);
+        addEmployment(employment);
         return employment;
     }
 
@@ -123,5 +168,30 @@ public class EmploymentLab {
             }
         }
         return null;
+    }
+
+
+    private static ContentValues getContentValues(Employment employment) {
+        ContentValues values = new ContentValues();
+        values.put(EmploymentTable.Cols.UUID, employment.getId().toString());
+        values.put(EmploymentTable.Cols.TITLE, employment.getTitle());
+        values.put(EmploymentTable.Cols.DATE, employment.getDate().getTimeInMillis());
+        values.put(EmploymentTable.Cols.COLOR, employment.getColor());
+        values.put(EmploymentTable.Cols.TIMEINT, employment.getTimeInt());
+        return values;
+    }
+
+    private EmploymentCursorWrapper queryEmployments(String whereClause, String[] whereArgs) {
+        Cursor cursor = mDatabase.query(
+                EmploymentTable.NAME,
+                null, // columns - null selects all columns
+                whereClause,
+                whereArgs,
+                null, // groupBy
+                null, // having
+                null  // orderBy
+        );
+        return new EmploymentCursorWrapper(cursor);
+
     }
 }

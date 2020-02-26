@@ -3,7 +3,6 @@ package com.android.bignerdranch.mytimecounter.model;
 import com.android.bignerdranch.mytimecounter.TimeHelper;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 
@@ -41,6 +40,11 @@ public class Employment implements HasDate{
         mId = UUID.randomUUID();
         mTime = TimeHelper.getTime(mTimeInt);
         mTimeInt = 0;
+        mDate = new GregorianCalendar();
+    }
+
+    public Employment(UUID id) {
+        mId = id;
         mDate = new GregorianCalendar();
     }
 
